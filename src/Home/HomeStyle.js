@@ -14,12 +14,14 @@ const styles = StyleSheet.create({
         flexDirection:'row'
     },
     label:{
-        fontSize:25,
+        textAlign:'center',
+        fontSize:15,
         flex:0.4,
         textAlignVertical :'center'
     },
     value:{
-        fontSize:50,
+        textAlign:'center',
+        fontSize:25,
         flex:0.6,
         textAlignVertical :'center'
     },

@@ -1,29 +1,38 @@
 import {AsyncStorage} from 'react-native';
 
 export const TODAY_TOTAL = "TODAY_TOTAL"
+
+import {firestore} from './../config/firebase';
+
+const totalsDocID = 'pm2lIyGtcNY6siRtPUOf';
+
 async function addTotal(value){
-    try{
+    const doc = await firestore.collection('totals').doc(totalsDocID);
 
-    
-    const total = await AsyncStorage.getItem(TODAY_TOTAL);
-    const totalFloat = parseFloat(total || '0');
-    const valueFloat = parseFloat(value || '0');
-    const newTotal = totalFloat + valueFloat;
-    
-    await AsyncStorage.setItem(TODAY_TOTAL,newTotal.toString());
-
-    return true;
-
-    }catch(e){
-        return false;
+    if(doc === null){
+        doc = await firestore.collection('totals').add({
+            totalsMonth:0,
+            totalsDay:0,
+            totalsToday:0,
+        });
+        totalsDocID = doc.id;
     }
+    const data = await doc.get();
+    let totalToday = data.data().totalToday;
+    
+    totalToday += parseFloat(value);
+    doc.update({
+        totalToday:totalToday,
+    });    
 }
 
-async function getTotal(){
-    return await AsyncStorage.getItem(TODAY_TOTAL);
+async function getTotals(){
+    const doc = await firestore.collection('totals').doc(totalsDocID).get();
+    return doc.data();
 }
 
 export {
     addTotal,
-    getTotal,
+    getTotals,
 }
+

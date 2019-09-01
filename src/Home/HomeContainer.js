@@ -3,20 +3,22 @@ import {View,Text,ScrollView,RefreshControl} from 'react-native';
 import styles from './HomeStyle';
 import { withNavigation,NavigationEvents } from 'react-navigation';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import { getTotal } from '../services/Storage';
+import { getTotals } from '../services/Storage';
 const HomeContainer = ({navigation}) => {
 
   const [total,setTotal] = useState('0');
-  const [refreshing,setRefreshing] = useState(false);
-
+  const [totalMonth,setTotalMonth]= useState('0');
+  const [totalDayAverage,setTotalDayAverage]= useState('0');
+  const [refreshing,setRefreshing]= useState(false);
   const fetchTotal = () =>{
     
-    getTotal().then((value)=>{
+    getTotals().then((value)=>{
       if(value !== null){
-        setTotal(value);
-        
+        setTotal(value.totalToday);
+        setTotalMonth(value.totalMonth);
+        setTotalDayAverage(value.totalDayAverage)
       }
-  })
+    });
   }
   useEffect(() => {
     fetchTotal();
@@ -34,7 +36,7 @@ const HomeContainer = ({navigation}) => {
                 Per Day:
             </Text>
             <Text style={styles.value}>
-               59.8kn
+               {totalDayAverage} kn
             </Text>
           </View>
           <View style={styles.infoItem}>
@@ -42,7 +44,7 @@ const HomeContainer = ({navigation}) => {
                 Per Month:
             </Text>
             <Text style={styles.value}>
-               600.5kn
+               {totalMonth} kn
             </Text>
           </View>
           <View style={styles.infoItem}>
